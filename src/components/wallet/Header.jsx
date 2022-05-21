@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 class Header extends Component {
   render() {
     const { email, expenses } = this.props;
+
     return (
       <section data-testid="email-field">
         <h2>
