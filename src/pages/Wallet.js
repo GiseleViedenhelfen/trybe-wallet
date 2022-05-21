@@ -2,23 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/wallet/Header';
-import { currencyWallet } from '../actions/index';
+import { currencyWallet, actionWallet } from '../actions/index';
 
 class Wallet extends React.Component {
   constructor() {
     super();
     this.state = {
       arrayMoeda: [],
+      despesas: [],
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
-    const { mapActionWallet } = this.props;
+    const { mapCurrencyWallet } = this.props;
     const chamaApi = await this.callApi();
     const arrayKeys = Object.keys(chamaApi);
     const indexUSDT = arrayKeys.indexOf('USDT');
     arrayKeys.splice(indexUSDT, 1);
-    mapActionWallet(arrayKeys);
+    mapCurrencyWallet(arrayKeys);
     this.setState({ arrayMoeda: arrayKeys });
   }
 
@@ -26,6 +28,15 @@ class Wallet extends React.Component {
     const request = await fetch('https://economia.awesomeapi.com.br/json/all');
     const requestJson = await request.json();
     return requestJson;
+  }
+
+  handleChange = ({ target }) => {
+    const { name } = target;
+    this.setState({ [name]: target.value });
+  }
+
+  handleClick() {
+    console.log('clique');
   }
 
   render() {
@@ -43,11 +54,13 @@ class Wallet extends React.Component {
                 id="inputValor"
                 type="number"
                 data-testid="value-input"
+                name="value"
+                onChange={ this.handleChange }
               />
             </label>
             <label htmlFor="Moeda">
               Moeda
-              <select id="Moeda">
+              <select id="Moeda" onChange={ this.handleChange } name="moeda">
                 {arrayMoeda.length > 0 && arrayMoeda.map((valor, index) => (
                   <option value={ valor } key={ index }>{valor}</option>
                 ))}
@@ -61,6 +74,8 @@ class Wallet extends React.Component {
               <select
                 data-testid="method-input"
                 id="tipoPagamento"
+                name="tipoPagamento"
+                onChange={ this.handleChange }
               >
                 {formasDePagamento.map((metodo, index) => (
                   <option key={ index } value={ metodo }>
@@ -74,6 +89,8 @@ class Wallet extends React.Component {
               <select
                 id="tipoDespesa"
                 data-testid="tag-input"
+                name="tipoDespesa"
+                onChange={ this.handleChange }
               >
                 {tipoDeDespesa.map((tipo, index) => (
                   <option key={ index } value={ tipo }>
@@ -87,21 +104,32 @@ class Wallet extends React.Component {
               <input
                 type="text"
                 id="descricao"
+                name="descricao"
                 data-testid="description-input"
+                onChange={ this.handleChange }
               />
             </label>
+            <button
+              type="button"
+              onClick={ this.handleClick }
+            >
+              Adicionar despesa
+
+            </button>
           </form>
         </section>
       </div>);
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  mapActionWallet: (valor) => dispatch(currencyWallet(valor)),
+  mapCurrencyWallet: (valor) => dispatch(currencyWallet(valor)),
+  mapActionWallet: (value) => dispatch(actionWallet(value)),
 });
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
+  expenses: state.wallet.expenses,
 });
 Wallet.propTypes = {
-  mapActionWallet: PropTypes.func.isRequired,
+  mapCurrencyWallet: PropTypes.func.isRequired,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);
