@@ -7,6 +7,10 @@ export const currencyWallet = (currency) => ({
   type: 'CURRENCY',
   currency,
 });
+export const expenseWallet = (expense) => ({
+  type: 'EXPENSE',
+  expense,
+});
 export const actionUser = (user) => ({
   type: 'USER',
   ...user,
