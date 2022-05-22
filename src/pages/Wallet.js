@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/wallet/Header';
+import Table from '../components/wallet/table';
 import { currencyWallet, expenseWallet } from '../actions/index';
 
 class Wallet extends React.Component {
@@ -82,7 +83,7 @@ class Wallet extends React.Component {
   render() {
     const { arrayOfCoins, currency, description, method, tag, value } = this.state;
     const methods = ['Dinheiro', 'Cartão de crédito', 'Cartão de débito'];
-    const tags = [this.food, 'Lazer', 'Trabalho', 'Transporte', 'Saúde'];
+    const tags = ['Alimentação', 'Lazer', 'Trabalho', 'Transporte', 'Saúde'];
     return (
       <div>
         <Header />
@@ -167,6 +168,7 @@ class Wallet extends React.Component {
             </button>
           </form>
         </section>
+        <Table />
       </div>);
   }
 }
